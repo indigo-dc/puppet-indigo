@@ -1,0 +1,15 @@
+class indigo::params {
+    $indigo_release                = "1",
+    $indigo_failovermethod         = "priority",
+    $indigo_priority               = "40",
+    $indigo_protect                = "1",
+    $indigo_enabled                = "1",
+    $indigo_gpgcheck               = "1",
+    $indigo_gpgkey                 = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-indigodc",
+    $indigo_updates_failovermethod = "priority",
+    $indigo_updates_priority       = "40",
+    $indigo_updates_protect        = "1",
+    $indigo_updates_enabled        = "1",
+    $indigo_updates_gpgcheck       = "1",
+    $indigo_updates_gpgkey         = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-indigodc",
+}
