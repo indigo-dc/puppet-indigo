@@ -19,63 +19,64 @@ class indigo (
         $indigo_3rdparty_gpgcheck       = $indigo::params::indigo_3rdparty_gpgcheck,
         $indigo_3rdparty_gpgkey         = $indigo::params::indigo_3rdparty_gpgkey,
     ) inherits indigo::params {
-    if "${::operatingsystem}" == "CentOS" and "${::operatingsystemmajrelease}" == "7" {
-		yumrepo {
-			"INDIGO-${indigo_release}-base":
-			  name           => "INDIGO-${indigo_release} - Base",
-			  baseurl        => "http://repo.indigo-datacloud.eu/repository/indigo/${indigo_release}/centos7/\$basearch/base",
-			  failovermethod => $indigo_failovermethod,
-              priority       => $indigo_priority,
-              protect        => $indigo_protect,
-			  enabled        => $indigo_enabled,
-			  gpgcheck       => $indigo_gpgcheck,
-			  gpgkey         => $indigo_gpgkey,
-		}
+        if "${::operatingsystem}" == "CentOS" and "${::operatingsystemmajrelease}" == "7" {
+	    yumrepo {
+	        "indigo-${indigo_release}-base":
+	    	    name           => "indigo-${indigo_release}-base",
+	    	    descr          => "INDIGO-1 - Base",
+                    baseurl        => "http://repo.indigo-datacloud.eu/repository/indigo/${indigo_release}/centos7/\$basearch/base",
+	    	    failovermethod => $indigo_failovermethod,
+	            priority       => $indigo_priority,
+	            protect        => $indigo_protect,
+	    	    enabled        => $indigo_enabled,
+	    	    gpgcheck       => $indigo_gpgcheck,
+	    	    gpgkey         => $indigo_gpgkey,
+	    }
 
-        yumrepo {
-			"INDIGO-${indigo_release}-updates":
-			  name           => "INDIGO-${indigo_release} - Updates",
-			  baseurl        => "http://repo.indigo-datacloud.eu/repository/indigo/${indigo_release}/centos7/\$basearch/updates",
-			  failovermethod => $indigo_updates_failovermethod,
-              priority       => $indigo_updates_priority,
-              protect        => $indigo_updates_protect,
-			  enabled        => $indigo_updates_enabled,
-			  gpgcheck       => $indigo_updates_gpgcheck,
-			  gpgkey         => $indigo_updates_gpgkey,
-		}
+            yumrepo {
+                "indigo-${indigo_release}-updates":
+            	    name           => "indigo-${indigo_release}-updates",
+            	    baseurl        => "http://repo.indigo-datacloud.eu/repository/indigo/${indigo_release}/centos7/\$basearch/updates",
+            	    failovermethod => $indigo_updates_failovermethod,
+                    priority       => $indigo_updates_priority,
+                    protect        => $indigo_updates_protect,
+                    enabled        => $indigo_updates_enabled,
+            	    gpgcheck       => $indigo_updates_gpgcheck,
+                    gpgkey         => $indigo_updates_gpgkey,
+            }
 
-        yumrepo {
-			"INDIGO-${indigo_release}-third-party":
-			  name           => "INDIGO-${indigo_release} - third-party",
-			  baseurl        => "http://repo.indigo-datacloud.eu/repository/indigo/${indigo_release}/centos7/\$basearch/third-party",
-			  failovermethod => $indigo_3rdparty_failovermethod,
-              priority       => $indigo_3rdparty_priority,
-              protect        => $indigo_3rdparty_protect,
-			  enabled        => $indigo_3rdparty_enabled,
-			  gpgcheck       => $indigo_3rdparty_gpgcheck,
-			  gpgkey         => $indigo_3rdparty_gpgkey,
-		}
+            yumrepo {
+                "indigo-${indigo_release}-third-party":
+            	    name           => "indigo-${indigo_release}-third-party",
+            	    baseurl        => "http://repo.indigo-datacloud.eu/repository/indigo/${indigo_release}/centos7/\$basearch/third-party",
+                    failovermethod => $indigo_3rdparty_failovermethod,
+                    priority       => $indigo_3rdparty_priority,
+                    protect        => $indigo_3rdparty_protect,
+                    enabled        => $indigo_3rdparty_enabled,
+                    gpgcheck       => $indigo_3rdparty_gpgcheck,
+                    gpgkey         => $indigo_3rdparty_gpgkey,
+            }
 
-		file {
-			"/etc/pki/rpm-gpg/RPM-GPG-KEY-indigo":
-				ensure => present,
-				owner  => "root",
-				group  => "root",
-				mode   => "0644",
-				source => "puppet:///modules/epel/RPM-GPG-KEY-indigo",
-		}
+            file {
+                "/etc/pki/rpm-gpg/RPM-GPG-KEY-indigodc":
+	            ensure => present,
+	            owner  => "root",
+	            group  => "root",
+	            mode   => "0644",
+	            source => "puppet:///modules/indigo/RPM-GPG-KEY-indigodc",
+            }
 
-    	indigo::gpg_key{
-			"indigo":
-      			path   => "/etc/pki/rpm-gpg/RPM-GPG-KEY-indigo",
-      			before => Yumrepo["INDIGO-${indigo_release}-base",
-								  "INDIGO-${indigo_release}-updates",
-								  "INDIGO-${indigo_release}-third-party"],
-    	}
-    }
-    elsif "${::operatingsystem}" == "Ubuntu" and "${::operatingsystemmajrelease}" == "14.04" {
-    }
-    else {
-        notice("Your operating system ${::operatingsystem} (release: ${::operatingsystemmajrelease}) is not currently supported by INDIGO-DataCloud project.")
-    }
+            indigo::gpg_key{
+                "indigo":
+                    path   => "/etc/pki/rpm-gpg/RPM-GPG-KEY-indigodc",
+                    before => Yumrepo["indigo-${indigo_release}-base",
+                                      "indigo-${indigo_release}-updates",
+                                      "indigo-${indigo_release}-third-party"],
+            }
+        }
+        elsif "${::operatingsystem}" == "Ubuntu" and "${::operatingsystemmajrelease}" == "14.04" {
+        }
+        else {
+            notice("Your operating system ${::operatingsystem} (release: ${::operatingsystemmajrelease}) is not currently supported by INDIGO-DataCloud project.")
+        }
 }
